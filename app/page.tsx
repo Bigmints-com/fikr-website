@@ -62,12 +62,10 @@ const plans = [
   {
     name: "Free",
     price: "0",
-    badge: null,
-    description: "Bring your own API key",
+    description: "Basic features for local use",
     features: [
       "Voice recording & playback",
-      "AI transcription (your API key)",
-      "AI insights (your API key)",
+      "On-device transcription",
       "Local-only data storage",
       "Unlimited notes",
     ],
@@ -76,9 +74,10 @@ const plans = [
   },
   {
     name: "Plus",
-    price: "2.99",
-    badge: null,
-    description: "Your API key + Cloud Sync",
+    price: "0",
+    originalPrice: "4.99",
+    badge: "Limited Offer",
+    description: "Cloud Sync + Enhanced Features",
     features: [
       "Everything in Free",
       "Cloud sync via Firebase",
@@ -86,38 +85,24 @@ const plans = [
       "Automatic backups",
       "Priority support",
     ],
-    cta: "Upgrade to Plus",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    price: "5.99",
-    badge: "Popular",
-    description: "Managed AI + Cloud Sync",
-    features: [
-      "Everything in Plus",
-      "No API key needed",
-      "Vertex AI transcription",
-      "Vertex AI insights",
-      "Standard usage limits",
-    ],
-    cta: "Go Pro",
+    cta: "Get Plus Free",
     highlighted: true,
   },
   {
-    name: "Pro Plus",
-    price: "9.99",
-    badge: "Best Value",
-    description: "Maximum power, maximum limits",
+    name: "Pro",
+    price: "14.99",
+    badge: "Coming Soon",
+    description: "Managed AI + Advanced Insights",
     features: [
-      "Everything in Pro",
-      "Higher usage limits",
-      "Priority AI processing",
-      "Early access to features",
-      "Premium support",
+      "Everything in Plus",
+      "No API key needed",
+      "Managed AI transcription",
+      "Advanced AI insights",
+      "Increased usage limits",
     ],
-    cta: "Go Pro Plus",
+    cta: "Coming Soon",
     highlighted: false,
+    disabled: true,
   },
 ];
 
@@ -250,7 +235,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
             {plans.map((plan) => (
               <Card
                 key={plan.name}
@@ -258,22 +243,27 @@ export default function Home() {
                   plan.highlighted
                     ? "border-teal/40 shadow-lg shadow-teal/10"
                     : "border-border/50 hover:border-teal/20"
-                }`}
+                } ${plan.disabled ? "opacity-80 grayscale-[0.5]" : ""}`}
               >
                 {plan.badge && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-teal text-teal-foreground border-0 px-3 py-0.5 text-xs font-semibold shadow-md shadow-teal/20">
+                    <Badge className="bg-teal text-teal-foreground border-0 px-3 py-0.5 text-xs font-semibold shadow-md shadow-teal/20 whitespace-nowrap">
                       {plan.badge}
                     </Badge>
                   </div>
                 )}
                 <CardHeader className="pb-4">
                   <CardTitle className="text-lg">{plan.name}</CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-sm min-h-[40px]">
                     {plan.description}
                   </CardDescription>
-                  <div className="pt-2">
+                  <div className="pt-2 flex items-baseline gap-2">
                     <span className="text-3xl font-bold">${plan.price}</span>
+                    {plan.originalPrice && (
+                      <span className="text-lg text-muted-foreground line-through decoration-teal/40">
+                        ${plan.originalPrice}
+                      </span>
+                    )}
                     <span className="text-sm text-muted-foreground">/month</span>
                   </div>
                 </CardHeader>
@@ -289,6 +279,7 @@ export default function Home() {
                 </CardContent>
                 <div className="p-6 pt-0">
                   <Button
+                    disabled={plan.disabled}
                     className={`w-full ${
                       plan.highlighted
                         ? "bg-teal text-teal-foreground hover:bg-teal/90 shadow-md shadow-teal/20"
